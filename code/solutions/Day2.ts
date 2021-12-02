@@ -15,8 +15,8 @@ export class Day2 extends Day {
 		return (finalCoordinate.x * finalCoordinate.y).toString();
 	}
 
-	private navigate(directions: string[]): coordinate {
-		let position: coordinate = {x: 0, y: 0};
+	private navigate(directions: string[]): ICoordinate {
+		let position: ICoordinate = {x: 0, y: 0};
 		
 		directions.forEach((value) => {
 			const action: string[] = value.split(" ");
@@ -26,7 +26,7 @@ export class Day2 extends Day {
 		return position;
 	}
 
-	private move(position: coordinate, action: string[]): coordinate {
+	private move(position: ICoordinate, action: string[]): ICoordinate {
 		const direction = action[0];
 		let magnitude = +action[1];
 		switch(action[0]) {
@@ -42,8 +42,8 @@ export class Day2 extends Day {
 		return position;
 	}
 
-	private navigateWithAim(directions: string[]): coordinate {
-		let position: coordinateWithAim = {x: 0, y: 0, aim: 0};
+	private navigateWithAim(directions: string[]): ICoordinate {
+		let position: ICoordinateWithAim = {x: 0, y: 0, aim: 0};
 		
 		directions.forEach((value) => {
 			const action: string[] = value.split(" ");
@@ -53,7 +53,7 @@ export class Day2 extends Day {
 		return position;
 	}
 
-	private moveWithAim(position: coordinateWithAim, action: string[]): coordinateWithAim {
+	private moveWithAim(position: ICoordinateWithAim, action: string[]): ICoordinateWithAim {
 		const direction = action[0];
 		let magnitude = +action[1];
 		switch(action[0]) {
@@ -71,12 +71,12 @@ export class Day2 extends Day {
 	}
 }
 
-interface coordinate {
+interface ICoordinate {
 	x: number;
 	y: number;
 }
 
-interface coordinateWithAim extends coordinate {
+interface ICoordinateWithAim extends ICoordinate {
 	aim: number;
 }
 
