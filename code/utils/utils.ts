@@ -1,4 +1,5 @@
 import * as fs from "fs";
+import * as readline from "readline";
 
 /**
  * Imports a file for use
@@ -14,4 +15,20 @@ export function fileToArray(path: string): string[] {
 		console.error(err);
 	}
 	return data;
+}
+
+/**
+ * Prompts the user for which days to execute and then calls the input callback with the response.
+ * @param callback callback to handle the response
+ */
+export function promptAction(callback: (response: string) => void): void {
+    const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
+
+    rl.question("Which day to run? ('all' to run all): ", (response) => {
+        callback(response);
+        rl.close();
+    });
 }

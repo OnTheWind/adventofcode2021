@@ -1,5 +1,35 @@
+import { promptAction } from "./utils/utils";
+import { Day } from "./solutions/Day";
 import { Day1 } from "./solutions/Day1";
 import { Day2 } from "./solutions/Day2";
 
-new Day1("../resources/day1.txt").print();
-new Day2("../resources/day2.txt").print();
+
+promptAction(resolveAction);
+
+/**
+ * Runs the days the user input
+ * @param answer 
+ */
+function resolveAction(answer: string): void {
+	const map = buildDayMap();
+
+	answer = answer.toUpperCase().trim();
+
+	if (answer === "ALL") {
+		map.forEach((value) => value.print());
+	}
+	else {
+		map.get(answer)?.print();
+	}
+}
+
+/**
+ * Builds the map of AOC days mapped to user input
+ * @returns the map
+ */
+function buildDayMap(): Map<string, Day> {
+	const map = new Map<string, Day>();
+	map.set("1", new Day1("../resources/day1.txt"));
+	map.set("2", new Day2("../resources/day2.txt"));
+	return map;
+}
