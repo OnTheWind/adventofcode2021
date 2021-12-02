@@ -16,14 +16,8 @@ export class Day2 extends Day {
 	}
 
 	private navigate(directions: string[]): ICoordinate {
-		let position: ICoordinate = {x: 0, y: 0};
-		
-		directions.forEach((value) => {
-			const action: string[] = value.split(" ");
-			this.move(position, action)
-		});
-
-		return position;
+		const navigator = (accumulator: ICoordinate, currentValue: string) => { return this.move(accumulator, currentValue.split(" ")); };
+		return directions.reduce<ICoordinate>(navigator, {x: 0, y: 0});
 	}
 
 	private move(position: ICoordinate, action: string[]): ICoordinate {
@@ -43,14 +37,8 @@ export class Day2 extends Day {
 	}
 
 	private navigateWithAim(directions: string[]): ICoordinate {
-		let position: ICoordinateWithAim = {x: 0, y: 0, aim: 0};
-		
-		directions.forEach((value) => {
-			const action: string[] = value.split(" ");
-			this.moveWithAim(position, action)
-		});
-
-		return position;
+		const navigator = (accumulator: ICoordinateWithAim, currentValue: string) => { return this.moveWithAim(accumulator, currentValue.split(" ")); };
+		return directions.reduce<ICoordinateWithAim>(navigator, {x: 0, y: 0, aim: 0});
 	}
 
 	private moveWithAim(position: ICoordinateWithAim, action: string[]): ICoordinateWithAim {
@@ -69,7 +57,10 @@ export class Day2 extends Day {
 
 		return position;
 	}
+
 }
+
+type navigator<U> = (accumulator: U, currentValue: string) => U;
 
 interface ICoordinate {
 	x: number;
