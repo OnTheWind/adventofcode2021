@@ -14,9 +14,15 @@ export class Day3 extends Day {
 
 	problem2(): string {
 		const tree = this.binaryArrayToTree(this.inputArray);
-		return (Number.parseInt(this.traverseTree(tree, TraverseMode.MOSTCOMMONBIT), 2) * Number.parseInt(this.traverseTree(tree, TraverseMode.LEASTCOMMONBIT), 2)).toString();
+		return (Number.parseInt(this.traverseTree(tree, TraverseMode.MostCommonBit), 2) * Number.parseInt(this.traverseTree(tree, TraverseMode.LeastCommonBit), 2)).toString();
 	}
 
+	/**
+	 * Processes one binary string and stores the result in the tracker. 01100 would add [-1, 1, 1, -1, -1] to the tracker
+	 * @param tracker Array of bit counts
+	 * @param currentLine current binary string to process
+	 * @returns tracker
+	 */
 	computeLine(tracker: number[], currentLine: string): number[] {
 		for (let i = 0; i < currentLine.length; i++) {
 			tracker[i] = (!!tracker[i] ? tracker[i] : 0) + (currentLine[i] === "1" ? 1 : -1);
@@ -25,6 +31,12 @@ export class Day3 extends Day {
 		return tracker;
 	}
 
+	/**
+	 * Takes an array of bit counts (number of 1s minus number of 0s per bit) and returns two 
+	 * numbers: The decimal representation of the list of most common bits and least common bits
+	 * @param bitCount array of 1 vs 0 bit differential
+	 * @returns two decimal numbers representing the compiled most common bits and least common bits
+	 */
 	bitCountToMeasurement(bitCount: number[]): number[] {
 		let currentBit = 0;
 		return bitCount.reduceRight((output: number[], currentValue, index) => {
@@ -33,6 +45,11 @@ export class Day3 extends Day {
 		}, [0, 0]);
 	}
 
+	/**
+	 * Transforms an input array into a tree sorted by 1s and 0s
+	 * @param inputArray Array of binary strings
+	 * @returns A tree with the count of binary strings in that branch
+	 */
 	binaryArrayToTree(inputArray: string[]): Tree | undefined {
 		let tree: Tree = { "1": { count: 0}, "0": { count: 0 }};
 		let splitArray: string[][] = [[], []];
@@ -56,15 +73,21 @@ export class Day3 extends Day {
 		return tree;
 	}
 
+	/**
+	 * Traverses a tree by following the node with the most entries or least entries and returns the binary string found at the end.
+	 * @param tree Tree to traverse
+	 * @param mode Traverse by least common or most common bit
+	 * @returns binary string found
+	 */
 	traverseTree(tree: Tree | undefined, mode: TraverseMode): string {
 		if (!tree) return "";
 
 		let bit: "0" | "1" | undefined = undefined;
-		if (mode === TraverseMode.MOSTCOMMONBIT) {
+		if (mode === TraverseMode.MostCommonBit) {
 			//Equal counts go to the 1 bit
 			bit = (tree[0].count > tree[1].count) ? "0" : "1";
 		}
-		else if (mode === TraverseMode.LEASTCOMMONBIT) {
+		else if (mode === TraverseMode.LeastCommonBit) {
 			//Equal counts go to the 0 bit
 			if (tree[0].count === 0) {
 				bit = "1";
@@ -93,6 +116,6 @@ interface TreeNode {
 }
 
 enum TraverseMode {
-	MOSTCOMMONBIT,
-	LEASTCOMMONBIT
+	MostCommonBit,
+	LeastCommonBit
 }
