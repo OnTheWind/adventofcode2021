@@ -2,6 +2,7 @@ import { promptAction } from "./utils/utils";
 import { Day } from "./solutions/Day";
 import { Day1 } from "./solutions/Day1";
 import { Day2 } from "./solutions/Day2";
+import { Day3 } from "./solutions/Day3";
 
 
 promptAction(resolveAction);
@@ -31,5 +32,6 @@ function buildDayMap(): Map<string, Day> {
 	const map = new Map<string, Day>();
 	map.set("1", new Day1("../resources/day1.txt"));
 	map.set("2", new Day2("../resources/day2.txt"));
+	map.set("3", new Day3("../resources/day3.txt"));
 	return map;
 }
