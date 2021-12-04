@@ -1,4 +1,3 @@
-import { stringify } from "querystring";
 import { Day } from "./Day";
 
 export class Day3 extends Day {
