@@ -38,6 +38,6 @@ function buildDayMap(): Map<string, Day> {
 	map.set("3", new Day3("../resources/day3.txt"));
 	map.set("4", new Day4("../resources/day4.txt"));
 	map.set("5", new Day5("../resources/day5.txt"));
-	map.set("6", new Day6("../resources/day6.txt"));
+	map.set("6", new Day6("../resources/test.txt"));
 	return map;
 }

@@ -14,11 +14,13 @@ export class Day6 extends Day {
 	}
 
 	problem1(): string {
-		return this.schoolOfLanternFish.fishCountAfterDays(80).toString();
+		return this.schoolOfLanternFish.fishCountAfterDaysEfficient(80).toString();
+		//return this.schoolOfLanternFish.fishCountAfterDays(80).toString();
 	}
 
 	problem2(): string {
-		return this.schoolOfLanternFish.fishCountAfterDays(256).toString();
+		return  this.schoolOfLanternFish.fishCountAfterDaysEfficient(256).toString();
+		//return this.schoolOfLanternFish.fishCountAfterDays(256).toString();
     }
 }
 
@@ -87,5 +89,60 @@ class SchoolOfLanternFish {
 			}
 			fishCounts[newFishTimer] += fishCounts[day];
 		}
+	 }
+
+	 /**
+	  * A more mathy approach to solving the problem. Population growth can be based on pascal's triangle due to how
+	  * maturity and reproduction rates interact
+	  * @param days total number of days to observe
+	  * @returns fish at the end of the observation
+	  */
+	 fishCountAfterDaysEfficient(days: number): number {
+		const fishCounts = this.__countFish(this.schoolOfFish);
+
+		let totalFish = 0;
+		fishCounts.forEach((breedingFish:number, day: number) => {
+			totalFish += breedingFish * this.__numberOfBreeds(days - day);
+		});
+
+		return totalFish;
+	 }
+
+	 /**
+	  * Counts the number of times a fish and its kin with a specific timer reproduce over the time period
+	  * @param days number of days to observe
+	  * @returns total number of fish
+	  */
+	 private __numberOfBreeds(days: number): number {
+		const completeGenerationCount = Math.floor((days-1) / this.newFishTimer) + 1;
+		const incompleteGenerationCount = Math.floor((days-1) / this.breedTimer) + 1;
+
+		//Sum the number of fish from completed generations
+		let numberOfFish = Math.pow(2, completeGenerationCount);
+
+		//Sum the number of fish from the incomplete generation
+		for (let generation = completeGenerationCount + 1; generation <= incompleteGenerationCount; generation++) {
+			const numTerms = Math.ceil((days - ((generation - 1) * this.breedTimer))/2);
+			numberOfFish += this.__sumOfFirstPascalTerms(generation, numTerms);
+		}
+		
+		return numberOfFish;
+	 }
+
+	 /**
+	  * Sums the first i numbers in the Nth row of Pascal's triangle
+	  * @param row row in pascal's triangle with "1" being the first row
+	  * @param term number of terms to sum
+	  * @returns sum of terms
+	  */
+	 private __sumOfFirstPascalTerms(row: number, term: number): number {
+		let prev = 1;
+		let sum = 1;
+		for (let i = 1; i <= term - 1; i++) {
+			const cur = (prev * (row - i))/ i;
+			sum += cur;
+			prev = cur;
+		}
+		return sum;
 	 }
 }

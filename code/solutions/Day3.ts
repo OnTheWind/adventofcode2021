@@ -38,7 +38,7 @@ export class Day3 extends Day {
 	 */
 	bitCountToMeasurement(bitCount: number[]): number[] {
 		let currentBit = 0;
-		return bitCount.reduceRight((output: number[], currentValue, index) => {
+		return bitCount.reduceRight((output: number[], currentValue) => {
 			output[currentValue >= 0 ? 1 : 0] += Math.pow(2,(currentBit++));
 			return output;
 		}, [0, 0]);
