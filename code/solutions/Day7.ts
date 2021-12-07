@@ -72,7 +72,6 @@ class SwarmOfCrabs {
 		});
 		const correctingFactor = 1/2 - lessThanMean/this.totalCrabs;
 		const optimalPosition = mean + correctingFactor;
-		console.log(mean,correctingFactor,optimalPosition);
 
 		if (optimalPosition % 1 < 0.5) {
 			return Math.floor(optimalPosition);
