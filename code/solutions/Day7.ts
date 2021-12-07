@@ -1,3 +1,4 @@
+import { runInThisContext } from "vm";
 import { Day } from "./Day";
 
 export class Day7 extends Day {
@@ -14,11 +15,11 @@ export class Day7 extends Day {
 	swarmOfCrabs: SwarmOfCrabs;
 
 	problem1(): string {
-		return this.swarmOfCrabs.gasToPosition(this.swarmOfCrabs.findMedian(), SwarmOfCrabs.linearConsumptionFunction).toString();
+		return this.swarmOfCrabs.gasToPosition(this.swarmOfCrabs.optimalLinearPosition(), SwarmOfCrabs.linearConsumptionFunction).toString();
 	}
 
 	problem2(): string {
-		return this.swarmOfCrabs.gasToPosition(this.swarmOfCrabs.findMean(), SwarmOfCrabs.exponentialConsumptionFunction).toString();
+		return this.swarmOfCrabs.gasToPosition(this.swarmOfCrabs.optimalExponentialPosition(), SwarmOfCrabs.exponentialConsumptionFunction).toString();
     }
 }
 
@@ -38,10 +39,10 @@ class SwarmOfCrabs {
 	}
 
 	/**
-	 * Finds the median position of all crabs. Optimal for linear consumption of fuel
-	 * @returns 
+	 * Finds the optimal position for a linear function. Uses median.
+	 * @returns optimal linear position
 	 */
-	findMedian(): number {
+	 optimalLinearPosition(): number {
 		const half = this.totalCrabs / 2;
 		let total = 0;
 		let median = -1;
@@ -56,11 +57,28 @@ class SwarmOfCrabs {
 	}
 
 	/**
-	 * Finds the floor of the mean position of all crabs. Optimal for exponential consumption of fuel
-	 * @returns the mean
+	 * Finds the optimal position for an exponential function. Uses mean plus a correction function.
+	 * @returns optimal exponential position
 	 */
-	findMean(): number {
-		return Math.floor(this.crabArray.reduce((total, numCrabs, curPosition) => total += (numCrabs * curPosition)) / this.totalCrabs);
+	 optimalExponentialPosition(): number {
+		const mean = this.crabArray.reduce((total, numCrabs, curPosition) => total += (numCrabs * curPosition), 0) / this.totalCrabs;
+		let lessThanMean = 0;
+		this.crabArray.some((numCrabs, position) => {
+			if (position < mean) {
+				lessThanMean += numCrabs;
+			} else {
+				return true;
+			}
+		});
+		const correctingFactor = 1/2 - lessThanMean/this.totalCrabs;
+		const optimalPosition = mean + correctingFactor;
+		console.log(mean,correctingFactor,optimalPosition);
+
+		if (optimalPosition % 1 < 0.5) {
+			return Math.floor(optimalPosition);
+		} else {
+			return Math.ceil(optimalPosition);
+		}
 	}
 
 	/**
