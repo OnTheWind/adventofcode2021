@@ -24,8 +24,6 @@ export class Day9 extends Day {
 
 class ElevationMap {
 	elevation: number[][];
-	horizontalSlopeMap: number[][] = [];
-	verticalSlopeMap: number[][] = [];
 	lowPoints: coord[] = [];
 
 	constructor(inputArray: string[]) {
@@ -38,7 +36,7 @@ class ElevationMap {
 			this.elevation.push(row);
 		});
 
-		this.__findLowPoints();
+		this.__findTroughs();
 	}
 
 	/**
@@ -114,7 +112,10 @@ class ElevationMap {
 		this.__checkCoordinate(checkedMap, { x: coordinate.x, y: coordinate.y + 1 }) + 1;
 	}
 
-	__findLowPoints(): void {
+	/**
+	 * Finds all spaces that are lower than all of their neighbors
+	 */
+	__findTroughs(): void {
 		for (let y=0; y < this.elevation.length; y++) {
 			for (let x=0; x < this.elevation[y].length; x++) {
 				if (this.__isTrough(x,y)) {
@@ -124,88 +125,26 @@ class ElevationMap {
 		}
 	}
 
+	/**
+	 * Compares a coordinate to its neighbors to determine if it is lower than it
+	 * @param x x coordinate
+	 * @param y y coordinate
+	 * @returns true if it is lower than its neighbors
+	 */
 	private __isTrough(x: number, y: number): boolean {
-		//Check above
-		if (y !== 0) {
-			if (this.__checkVerticalSlope(x, y-1) !== Slope.decreasing) {
-				return false;
-			}
+		//If not lower than vertical neighbors
+		if ([y-1,y+1].some((y2) => y2 > -1 && y2 < this.elevation.length && this.elevation[y][x] >= this.elevation[y2][x]))
+		{
+			return false;
 		}
-		//Check below
-		if (y !== this.elevation.length - 1) {
-			if (this.__checkVerticalSlope(x, y) !== Slope.increasing) {
-				return false;
-			}
+		//If not lower than horizontal neighbors
+		if ([x-1,x+1].some((x2) => x2 > -1 && x2 < this.elevation[y].length && this.elevation[y][x] >= this.elevation[y][x2]))
+		{
+			return false;
 		}
-		//Check left
-		if (x !== 0) {
-			if (this.__checkHorizontalSlope(x-1, y) !== Slope.decreasing) {
-				return false;
-			}
-		}
-		//Check right
-		if (x !== this.elevation[y].length - 1) {
-			if (this.__checkHorizontalSlope(x, y) !== Slope.increasing) {
-				return false;
-			}
-		}
-
+		console.log(x,y);
 		return true;
 	}
-
-	/**
-	 * Checks the slope between the coordinate and the one above it. If it hasn't been calculated yet, calculates the slope.
-	 * @param x x coordinate
-	 * @param y y coordinate
-	 * @returns slope
-	 */
-	private __checkVerticalSlope(x: number, y: number): Slope {
-		if (!this.verticalSlopeMap[y]) {
-			this.verticalSlopeMap[y] = [];
-		}
-		if (!this.verticalSlopeMap[y][x]) {
-			this.verticalSlopeMap[y][x] = this.__compareElevations(this.elevation[y][x], this.elevation[y+1][x]);
-		}
-		return this.verticalSlopeMap[y][x];
-	}
-
-	/**
-	 * Checks the slope between the coordinate and the one left of it. If it hasn't been calculated yet, calculates the slope.
-	 * @param x x coordinate
-	 * @param y y coordinate
-	 * @returns slope
-	 */
-	private __checkHorizontalSlope(x: number, y: number): Slope {
-		if (!this.horizontalSlopeMap[y]) {
-			this.horizontalSlopeMap[y] = [];
-		}
-		if (!this.horizontalSlopeMap[y][x]) {
-			this.horizontalSlopeMap[y][x] = this.__compareElevations(this.elevation[y][x], this.elevation[y][x+1]);
-		}
-		return this.horizontalSlopeMap[y][x];
-	}
-
-	/**
-	 * Compares two elevations and returns the slope
-	 * @param elevation1 first elevation (above or left)
-	 * @param elevation2 second elevation (below or right)
-	 * @returns slope moving from the first to second elevation
-	 */
-	private __compareElevations(elevation1: number, elevation2: number): Slope {
-		if (elevation1 > elevation2) {
-			return Slope.decreasing;
-		}
-		else if (elevation1 < elevation2) {
-			return Slope.increasing;
-		}
-		return Slope.equal;
-	}
-}
-
-enum Slope {
-	decreasing,
-	increasing,
-	equal
 }
 
 interface coord {
