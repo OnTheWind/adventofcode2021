@@ -142,7 +142,6 @@ class ElevationMap {
 		{
 			return false;
 		}
-		console.log(x,y);
 		return true;
 	}
 }
