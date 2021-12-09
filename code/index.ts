@@ -8,6 +8,7 @@ import { Day5 } from "./solutions/Day5";
 import { Day6 } from "./solutions/Day6";
 import { Day7 } from "./solutions/Day7";
 import { Day8 } from "./solutions/Day8";
+import { Day9 } from "./solutions/Day9";
 
 
 promptAction(resolveAction);
@@ -44,6 +45,7 @@ function buildDayMap(): Map<string, Day> {
 	map.set("6", new Day6("../resources/day6.txt"));
 	map.set("7", new Day7("../resources/day7.txt"));
 	map.set("8", new Day8("../resources/day8.txt"));
-	//map.set("TEST", new Day8("../resources/test.txt"));
+	map.set("9", new Day9("../resources/day9.txt"));
+	map.set("TEST", new Day9("../resources/test.txt"));
 	return map;
 }
